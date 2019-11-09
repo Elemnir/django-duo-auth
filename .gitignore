@@ -1,0 +1,10 @@
+*.pyc
+*.swp
+
+*.egg-info
+build/
+dist/
+venv/
+py2venv/
+py3venv/
+docs/_build
