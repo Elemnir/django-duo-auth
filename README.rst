@@ -6,6 +6,16 @@ A Django middleware that adds 2-factor authentication via Duo.
 
 ``django-duo-auth`` is designed to be easily integrated into an existing Django project to quickly add 2-factor authentication. It supports one or more Duo applications and uses the configured ``AUTHENTICATION_BACKENDS`` to select which users it should authenticate under which circumstance.
 
+--------------
+ Installation
+--------------
+
+``django-duo-auth`` can be installed from PyPI, and only depends on ``duo-web``.
+
+::
+    
+    ?> pip install django-duo-auth
+
 ---------------
  Configuration
 ---------------
