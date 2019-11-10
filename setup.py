@@ -54,6 +54,7 @@ setup(
     long_description=read("README.rst"),
     packages=PACKAGES,
     package_dir={'':'src'},
+    include_package_data=True,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
 )
