@@ -1,2 +1,4 @@
 include *.rst LICENSE
 recursive-include tests *.py
+recursive-include src/duo_auth/static *
+recursive-include src/duo_auth/templates *
