@@ -63,6 +63,12 @@ Then include the URLs in ``urls.py``::
 
 The ``FIRST_STAGE_BACKENDS`` key for each entry in ``DUO_CONFIG`` should be a list of the authentication backends that the Duo application should act as a second factor for. If an authentication backend isn't listed in any ``FIRST_STAGE_BACKENDS`` list, then Duo is disabled.
 
+--------------------
+ Username Remapping
+--------------------
+
+If it is necessary to remap a user's name to a different name in Duo, you can add the ``USERNAME_REMAPPER`` key to a Duo Config entry. The value of ``USERNAME_REMAPPER`` should be a function, callable object, or a string containing the dotted path to a callable which accepts an HttpRequest object and returns a username string, which will be used in the Duo signing request instead of the name as it appears in ``request.user.username``.
+
 ----------------------------------
  Overloading the Default Template
 ----------------------------------
