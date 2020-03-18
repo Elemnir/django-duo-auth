@@ -2,6 +2,11 @@
  Changelog
 ===========
 
+Version 0.1.4
+-------------
+
+- Adding some more logging
+
 Version 0.1.3
 -------------
 

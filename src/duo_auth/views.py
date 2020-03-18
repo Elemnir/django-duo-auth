@@ -16,6 +16,7 @@ class DuoAuthView(View):
         if 'USERNAME_REMAPPER' in app:
             ur = app['USERNAME_REMAPPER']
             username_callable = ur if callable(ur) else import_string(ur)
+        logger.debug('Invoking username mapper: {0}'.format(username_callable))
         return username_callable(request)
 
 
@@ -23,8 +24,12 @@ class DuoAuthView(View):
         next_url = request.GET.get('next', settings.LOGIN_REDIRECT_URL)
         # Figure out which Duo App applies to the user's backend
         app_name, app = None, None
+        auth_backend = request.session[BACKEND_SESSION_KEY]
+        logger.debug(
+            'Checking for Duo app to follow after backend: {0}'.format(auth_backend)
+        )
         for k, v in settings.DUO_CONFIG.items():
-            if request.session[BACKEND_SESSION_KEY] in v.get('FIRST_STAGE_BACKENDS',[]):
+            if auth_backend in v.get('FIRST_STAGE_BACKENDS',[]):
                 app_name, app = k, v
                 break
         else:
@@ -36,6 +41,7 @@ class DuoAuthView(View):
         sig_request = duo_web.sign_request(
             app["IKEY"], app["SKEY"], app["AKEY"], username
         )
+        logger.info('User {0} started Duo using app {1}'.format(username, app_name))
         return render(request, 'duo_auth_form.html', {
             'duo_css_src': os.path.join(settings.STATIC_URL, 'css', 'Duo-Frame.css'),
             'duo_js_src': os.path.join(settings.STATIC_URL, 'javascript', 'Duo-Web-v2.js'),
