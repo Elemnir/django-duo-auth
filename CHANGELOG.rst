@@ -2,6 +2,11 @@
  Changelog
 ===========
 
+Version 0.1.5
+-------------
+
+- Making an exception for forcing second factor for paths containing ``STATIC_URL``
+
 Version 0.1.4
 -------------
 

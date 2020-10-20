@@ -1,3 +1,4 @@
+from django.conf        import settings
 from django.shortcuts   import redirect
 from django.urls        import reverse
 
@@ -6,6 +7,9 @@ class DuoAuthMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
+        if request.path.startswith(settings.STATIC_URL):
+            return self.get_response(request)
+
         if request.user.is_authenticated and 'DUO_STATUS' not in request.session:
             request.session['DUO_STATUS'] = 'IN_PROGRESS'
             return redirect(reverse('duo_auth:duo_login') + "?next=" + request.path)
