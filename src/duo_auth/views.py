@@ -3,6 +3,7 @@ import os
 
 from django.conf                    import settings
 from django.contrib.auth            import logout, BACKEND_SESSION_KEY
+from django.contrib.auth.mixins     import LoginRequiredMixin
 from django.shortcuts               import render, redirect
 from django.utils.module_loading    import import_string
 from django.views                   import View
@@ -10,7 +11,7 @@ import duo_web
 
 logger = logging.getLogger(__name__)
 
-class DuoAuthView(View):
+class DuoAuthView(LoginRequiredMixin, View):
     def get_username(self, app, request):
         username_callable = lambda r: r.user.username
         if 'USERNAME_REMAPPER' in app:
