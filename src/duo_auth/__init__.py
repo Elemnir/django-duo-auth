@@ -1,4 +1,4 @@
-__version__     = "0.1.5"
+__version__     = "0.1.6"
 
 __title__       = "django-duo-auth"
 __description__ = "A Django middleware that adds 2-factor authentication via Duo."

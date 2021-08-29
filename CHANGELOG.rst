@@ -2,6 +2,11 @@
  Changelog
 ===========
 
+Version 0.1.6
+-------------
+
+- Some extra logic ensuring that the user has logged in before Duo logic fires
+
 Version 0.1.5
 -------------
 
