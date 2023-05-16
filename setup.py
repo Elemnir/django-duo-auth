@@ -7,21 +7,31 @@ NAME = 'django-duo-auth'
 PACKAGES = find_packages(where='src')
 META_PATH = os.path.join("src", "duo_auth", "__init__.py")
 CLASSIFIERS = [
+    "Development Status :: 4 - Beta"
     "Environment :: Web Environment",
     "Framework :: Django",
-    "Framework :: Django :: 2.2",
+    "Framework :: Django :: 2",
+    "Framework :: Django :: 3",
+    "Framework :: Django :: 4",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Internet :: WWW/HTTP",
-    "Topic :: Internet :: WWW/HTTP :: Dynamic Content"
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: System :: Systems Administration :: Authentication/Directory",
 ]
-INSTALL_REQUIRES = ['duo-web']
+INSTALL_REQUIRES = ['duo-universal']
+
+EXTRAS_REQUIRE = {
+    'legacy': ['duo-web'],
+}
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -57,4 +67,5 @@ setup(
     include_package_data=True,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
+    extras_require=EXTRAS_REQUIRE,
 )
