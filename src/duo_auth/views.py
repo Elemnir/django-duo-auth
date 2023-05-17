@@ -46,8 +46,8 @@ def get_username(app, request):
 
 
 def prepare_duo_client(request):
-    """Given the in-flight request, determine a which, if any, configured
-    Duo apps is appropriate for second-stage authentication based on what
+    """Given the in-flight request, determine which, if any, configured
+    Duo app is appropriate for second-stage authentication based on what
     was used first, returning the app's configuration and a Client
     """
     app_name, app = None, None
