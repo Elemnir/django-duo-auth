@@ -5,7 +5,6 @@
     This module defines the views which implement the Duo Universal Prompt
     API for performing second-stage user authentication. Users MUST have 
     already logged in using a first stage authentication backend.
-
 """
 import logging
 
@@ -68,7 +67,7 @@ def prepare_duo_client(request):
         client_id = first_existing(app, ["CLIENT_ID", "IKEY"]),
         client_secret = first_existing(app, ["CLIENT_SECRET", "SKEY"]),
         host = first_existing(app, ["API_HOSTNAME", "HOST"]),
-        redirect_uri = reverse('duo_auth:duo_callback'),
+        redirect_uri = request.build_absolute_uri(reverse('duo_auth:duo_callback')),
     )
 
 
@@ -86,6 +85,20 @@ class DuoAuthView(LoginRequiredMixin, View):
             request.session['DUO_STATUS'] = 'SKIPPED'
             return redirect(next_url)
 
+        if not request.is_secure():
+            if not app.get('FAIL_OPEN', False):
+                raise RuntimeError(
+                    'Duo will not callback to non-HTTPS clients. Check settings for '
+                    'SECURE_PROXY_SSL_HEADER if running Django behind a proxy.'
+                )
+            logger.warning(
+                'Duo will not callback to non-HTTPS clients. Check settings for '
+                'SECURE_PROXY_SSL_HEADER if running Django behind a proxy. '
+                'Skipping due to FAIL_OPEN'
+            )
+            request.session['DUO_STATUS'] = 'SKIPPED'
+            return redirect(next_url)
+
         request.session['DUO_USERNAME'] = get_username(app, request)
         try:
             client.health_check()
@@ -96,6 +109,7 @@ class DuoAuthView(LoginRequiredMixin, View):
                 return redirect(next_url)
             logger.error('Duo failed health check, disallowing login')
             logout(request)
+            return redirect(next_url)
 
         logger.debug('Preparing state and redirecting to Duo...')
         request.session["DUO_STATE"] = client.generate_state()
@@ -109,18 +123,18 @@ class DuoAuthView(LoginRequiredMixin, View):
 class DuoCallbackView(LoginRequiredMixin, View):
     """Callback view for Duo after completing the universal prompt"""
     def get(self, request):
+        next_url = request.session.get('POST_AUTH_URL', settings.LOGIN_REDIRECT_URL)
         if ('DUO_STATE' not in request.session
                 or 'state' not in request.GET
                 or 'duo_code' not in request.GET
                 or request.session['DUO_STATE'] != request.GET['state']):
             logger.info('Malformed request to Duo callback endpoint')
             logout(request)
+            return redirect(next_url)
 
         app, client = prepare_duo_client(request)
         client.exchange_authorization_code_for_2fa_result(
             request.GET['duo_code'], get_username(app, request)
         )
         request.session['DUO_STATUS'] = 'COMPLETED'
-        return redirect(
-            request.session.get('POST_AUTH_URL', settings.LOGIN_REDIRECT_URL)
-        )
+        return redirect(next_url)
