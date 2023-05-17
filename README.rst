@@ -65,7 +65,7 @@ And that's it!
 
 By default, the Duo Universal Prompt will be used. If the traditional iframe-based prompt is desired, add ``DUO_LEGACY_PROMPT`` to your settings and it, as well as ``DUO_CONFIG``, will look more like this::
     
-    DUO_LEGACY_PROMPT: True
+    DUO_LEGACY_PROMPT = True
     DUO_CONFIG = {
         'DEFAULT': {
             'HOST': '<api-host-url>',
